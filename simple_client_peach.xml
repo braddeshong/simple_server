@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Peach xmlns="http://peachfuzzer.com/2012/Peach" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://peachfuzzer.com/2012/Peach /peach/peach.xsd">
+    
+    <DataModel name="TheDataModel">
+        <Number name="DataSize" size="32">
+            <Relation type="size" of="TheData"/>
+        </Number>
+        <Blob name = "TheData"/>
+    </DataModel>
+
+    <DataModel name="Response">
+        <String name="StringResponse"/>
+    </DataModel>
+
+	<StateModel name="TheState" initialState="Initial">
+		<State name="Initial">
+            <!--<Action type="call" method="GoDoStuff"/>-->
+			<Action type="output">
+				<DataModel ref="TheDataModel"/>
+            </Action>
+            <Action type="input">
+                <DataModel ref="Response"/>
+            </Action>
+		</State>
+
+    </StateModel>
+
+    <Agent name="Local">
+        <Monitor class="Process">
+            <Param name="Executable" value="./simple_server"/>
+        </Monitor>
+    </Agent>
+
+
+	<Test name="Default">
+        <StateModel ref="TheState"/>
+        <Agent ref="Local" platform="linux"/>
+        <Publisher class="TcpClient">
+            <Param name="Host" value="127.0.0.1" />
+            <Param name="Port" value="9999" />
+        </Publisher>
+		<Logger class="File">
+			<Param name="Path" value="logs"/>
+		</Logger>
+	</Test>
+
+</Peach>
+<!-- end -->
